@@ -12,7 +12,7 @@ namespace Logit_Transport.Data.Models
         [Required]
         public string Town { get; set; }
 
-        [Required]
+        [Required]        
         public string Street { get; set; }
 
         [Required]
@@ -22,6 +22,6 @@ namespace Logit_Transport.Data.Models
 
         public int? Floor { get; set; }
 
-        public char? Entrance { get; set; }
+        public string Entrance { get; set; }
     }
 }

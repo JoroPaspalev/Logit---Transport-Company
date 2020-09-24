@@ -12,7 +12,6 @@ namespace Logit_Transport.Services
     public class ParticipantService : IPraticipantService
     {
         private const string ErrorMessage = "Invalid data";
-
         private const string SuccessfullyImportedParticipant = "Imported {0}";
 
         private LogitDbContext context;
@@ -32,6 +31,9 @@ namespace Logit_Transport.Services
             Console.Write("Phone:");
             string phone = Console.ReadLine();
 
+            Console.Write("Email:");
+            string email = Console.ReadLine();
+
             Console.Write("Town:");
             string town = Console.ReadLine();
 
@@ -42,14 +44,21 @@ namespace Logit_Transport.Services
             string streetNumber = Console.ReadLine();
 
             Console.Write("Block:");
-            string block = Console.ReadLine();
+            string inputBlock = Console.ReadLine();
+            string block = IfInputIsEmptyOrWtiteSpace(inputBlock);            
 
             Console.Write("Entrance:");
-            char? entrance = char.Parse(Console.ReadLine());
+            string inputEntrance = Console.ReadLine();
+            string entrance = IfInputIsEmptyOrWtiteSpace(inputEntrance);
 
             Console.Write("Floor:");
-            int? floor = int.Parse(Console.ReadLine());
+            string floorAsString = Console.ReadLine();
+            int? floor = null;
 
+            if (!string.IsNullOrWhiteSpace(floorAsString))
+            {
+                floor = int.Parse(floorAsString);
+            }
 
             //1. Тук правя инстанция на адреса без да се интересувам дали са верни данните. По-късно ще го проверявам
             var currImportAddressDto = new ImportAddressDto
@@ -62,7 +71,7 @@ namespace Logit_Transport.Services
                 Floor = floor
             };
 
-            //2. Тук проверявам дали адреса отговаря на изискванията, ако не гърмя
+            //2. Тук проверявам дали адреса отговаря на изискванията, ако не, гърмя
             if (!IsValid(currImportAddressDto))
             {
                 sb.AppendLine(ErrorMessage);
@@ -85,7 +94,8 @@ namespace Logit_Transport.Services
             {
                 Name = name,
                 Phone = phone,
-                Address = currAddress
+                Address = currAddress,
+                Email = email
             };
 
             //5. Тук вече си правя проверката на Name и Phone на ParticipantDto. Ако не е валидно името или телефона гърмя
@@ -101,7 +111,8 @@ namespace Logit_Transport.Services
             {
                 Name = currImportParticipantDto.Name,
                 Phone = currImportParticipantDto.Phone,
-                Address = currImportParticipantDto.Address
+                Address = currImportParticipantDto.Address,
+                Email = currImportParticipantDto.Email
             };
 
             context.Participants.Add(currParticipant);
@@ -119,6 +130,22 @@ namespace Logit_Transport.Services
             var result = Validator.TryValidateObject(entity, validationContext, validationResult, true);
 
             return result;
+        }
+
+        private string IfInputIsEmptyOrWtiteSpace(string input)
+        {
+            string exitValue;
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                exitValue = null;
+            }
+            else
+            {
+                exitValue = input;
+            }
+
+            return exitValue;
         }
     }
 }

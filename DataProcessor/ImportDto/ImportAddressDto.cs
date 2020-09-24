@@ -11,6 +11,7 @@ namespace Logit_Transport.DataProcessor.ImportDto
         public string Town { get; set; }
 
         [Required]
+        [RegularExpression(@"^[a-zA-Z .]+$")]
         public string Street { get; set; }
 
         [Required]
@@ -20,6 +21,6 @@ namespace Logit_Transport.DataProcessor.ImportDto
 
         public int? Floor { get; set; }
 
-        public char? Entrance { get; set; }
+        public string Entrance { get; set; }
     }
 }
